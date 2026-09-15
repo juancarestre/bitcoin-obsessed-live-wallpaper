@@ -1,0 +1,57 @@
+# Local configuration and credentials (never publish these)
+.private/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+local.properties
+gradle-local.properties
+signing.properties
+keystore.properties
+google-services.json
+GoogleService-Info.plist
+*service-account*.json
+*service_account*.json
+*credentials*.json
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+backend/wrangler.json
+backend/wrangler.jsonc
+backend/wrangler.toml
+!backend/wrangler.example.jsonc
+
+# Personal reference material and private project history
+screeshoots/
+screenshots/
+**/WhatsApp*
+docs/archive/
+docs/play-store-release.md
+
+# Build outputs and caches
+.gradle/
+.kotlin/
+**/build/
+**/dist/
+.wrangler/
+node_modules/
+coverage/
+*.apk
+*.aab
+*.apks
+*.hprof
+*.log
+__pycache__/
+*.pyc
+.venv/
+
+# IDE and operating-system state
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
