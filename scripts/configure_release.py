@@ -53,7 +53,8 @@ def upload(repo):
     config = ROOT / "app/google-services.json"
     if not config.exists():
         raise RuntimeError("Configure app/google-services.json first")
-    local = dict(line.split("=", 1) for line in (ROOT / "local.properties").read_text().splitlines() if "=" in line and not line.startswith("#"))
+    local_path = ROOT / "local.properties"
+    local = dict(line.split("=", 1) for line in local_path.read_text().splitlines() if "=" in line and not line.startswith("#")) if local_path.exists() else {}
     backend_url = os.environ.get("BACKEND_URL") or local.get("backend.url")
     if not backend_url:
         raise RuntimeError("Set BACKEND_URL or backend.url in local.properties")
@@ -65,22 +66,27 @@ def upload(repo):
     print("Release secrets configured. No backend service-account credentials were uploaded.")
 
 
-parser = argparse.ArgumentParser()
-sub = parser.add_subparsers(dest="command", required=True)
-sub.add_parser("init")
-sub.add_parser("fingerprints")
-build = sub.add_parser("build")
-build.add_argument("--version", required=True)
-build.add_argument("--code", required=True)
-github = sub.add_parser("github")
-github.add_argument("repo")
-args = parser.parse_args()
-if args.command == "init":
-    initialize()
-elif args.command == "github":
-    upload(args.repo)
-elif args.command == "fingerprints":
-    run(["keytool", "-list", "-v", "-keystore", str(KEYSTORE), "-alias", "release",
-         "-storepass:env", "RELEASE_KEYSTORE_PASSWORD"], env=environment())
-elif args.command == "build":
-    run([str(ROOT / "gradlew"), "assembleRelease"], env={**environment(), "RELEASE_VERSION_NAME": args.version, "RELEASE_VERSION_CODE": args.code})
+def main():
+    parser = argparse.ArgumentParser()
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("init")
+    sub.add_parser("fingerprints")
+    build = sub.add_parser("build")
+    build.add_argument("--version", required=True)
+    build.add_argument("--code", required=True)
+    github = sub.add_parser("github")
+    github.add_argument("repo")
+    args = parser.parse_args()
+    if args.command == "init":
+        initialize()
+    elif args.command == "github":
+        upload(args.repo)
+    elif args.command == "fingerprints":
+        run(["keytool", "-list", "-v", "-keystore", str(KEYSTORE), "-alias", "release",
+             "-storepass:env", "RELEASE_KEYSTORE_PASSWORD"], env=environment())
+    elif args.command == "build":
+        run([str(ROOT / "gradlew"), "assembleRelease"], env={**environment(), "RELEASE_VERSION_NAME": args.version, "RELEASE_VERSION_CODE": args.code})
+
+
+if __name__ == "__main__":
+    main()

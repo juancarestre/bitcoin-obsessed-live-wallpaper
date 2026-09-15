@@ -22,15 +22,7 @@ class ObsessedApp: Application() {
     override fun onCreate() {
         super.onCreate()
         val prefs=Store.prefs(this)
-        // Preserve the existing account's devices/rules when upgrading from the invite-only version.
-        prefs.getString("premiumUid",null)?.let { uid ->
-            if(!prefs.contains("accountUid"))prefs.edit().putString("accountUid",uid).apply()
-        }
-        prefs.edit().remove("premium").remove("premiumUid").apply()
-        if(!prefs.getBoolean("accountMigrationV2",false)) {
-            val edit=prefs.edit().putBoolean("accountMigrationV2",true).putBoolean("alerts",false).putBoolean("syncPending",false)
-            listOf("installCode","syncStatus","lastAlert","wallChart","wallX","wallY","textSize","background","opacity","ink","darkText","padding").forEach { edit.remove(it) }
-            edit.apply()
+        if(migrateAccountPreferences(prefs)) {
             WorkManager.getInstance(this).cancelUniqueWork("enrollment")
         }
         Notifications.channels(this)
