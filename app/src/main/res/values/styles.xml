@@ -1,0 +1,12 @@
+<resources>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#F7931A</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#101216</item>
+    </style>
+    <string name="wallpaper_description">Your photo with a live Bitcoin price.</string>
+    <string name="widget_description">Bitcoin perpetual price, 1h candles and 24h change.</string>
+</resources>

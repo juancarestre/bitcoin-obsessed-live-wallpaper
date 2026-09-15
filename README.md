@@ -8,6 +8,28 @@ Bitcoin on your home screen. A free Android live wallpaper, transparent candlest
 
 **[Download the latest APK](https://github.com/juancarestre/bitcoin-obsessed-live-wallpaper/releases/latest)** · [Installation](docs/INSTALLING.md) · [Build from source](docs/DEVELOPMENT.md)
 
+## See it in action
+
+Real screenshots from an Android phone. Tap an image to view it at full size; the prices shown are historical examples.
+
+<table>
+  <tr>
+    <th>Home screen</th>
+    <th>Lock screen</th>
+    <th>Expanded notification</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="docs/images/home-screen.png"><img src="docs/images/home-screen.png" width="240" alt="Android home screen with a small Bitcoin price overlay and a transparent hourly candlestick widget"></a></td>
+    <td align="center"><a href="docs/images/lock-screen.png"><img src="docs/images/lock-screen.png" width="240" alt="Android lock screen showing the Bitcoin wallpaper price and a compact price notification"></a></td>
+    <td align="center"><a href="docs/images/expanded-notification.png"><img src="docs/images/expanded-notification.png" width="240" alt="Expanded Bitcoin notification showing the price, 24-hour change, and hourly candlestick chart"></a></td>
+  </tr>
+  <tr>
+    <td><strong>Bitcoin at a glance.</strong> A small live price at the top and a transparent, resizable widget with 24 hourly candles.</td>
+    <td><strong>Check the price while locked.</strong> The live wallpaper and compact price notification remain visible where supported by your device.</td>
+    <td><strong>More detail without opening the app.</strong> Expand the price notification to see its 24-hour change, update time, and candlestick chart.</td>
+  </tr>
+</table>
+
 ## Features
 
 - Your own wallpaper photo with a small, live Bitcoin price overlay.

@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { generateKeyPair, SignJWT } from 'jose';
+import { authenticate } from '../src/auth.mjs';
+import { handleRequest } from '../src/index.mjs';
+
+test('Google identity: verified Google accounts all have free access; invalid tokens are rejected',async()=>{
+  const {privateKey,publicKey}=await generateKeyPair('RS256');
+  const other=await generateKeyPair('RS256');
+  const env={FIREBASE_PROJECT_ID:'test-project'};
+  const now=Math.floor(Date.now()/1000);
+  const make=async(claims={},key=privateKey)=>new SignJWT({sub:'uid-123',email:'owner@example.com',email_verified:true,firebase:{sign_in_provider:'google.com'},auth_time:now,iat:now,exp:now+3600,aud:'test-project',iss:'https://securetoken.google.com/test-project',...claims}).setProtectedHeader({alg:'RS256'}).sign(key);
+  const auth=async(claims={},key=privateKey)=>authenticate(new Request('https://test',{headers:{Authorization:`Bearer ${await make(claims,key)}`}}),env,publicKey);
+  assert.equal((await auth()).email,'owner@example.com');
+  assert.equal((await auth({email:'other@example.com'})).email,'other@example.com');
+  assert.equal(await auth({email_verified:false}),null);
+  assert.equal(await auth({firebase:{sign_in_provider:'password'}}),null);
+  assert.equal(await auth({aud:'another-project'}),null);
+  assert.equal(await auth({exp:now-60}),null);
+  assert.equal(await auth({iat:now+3600}),null);
+  assert.equal(await auth({},other.privateKey),null);
+  const token=await make({email:'other@example.com'});
+  const request=new Request('https://test/account',{headers:{Authorization:`Bearer ${token}`}});
+  const response=await handleRequest(request,env,(r,e)=>authenticate(r,e,publicKey));
+  assert.equal(response.status,200);
+  const account=await response.json();
+  assert.equal(account.alertsEnabled,true);
+  assert.equal(account.email,'other@example.com');
+  assert.equal('premium' in account,false);
+  const legacy=await handleRequest(new Request('https://test/device',{method:'PUT',headers:{Authorization:'Bearer old-install-code'},body:'{}'}),env);
+  assert.equal(legacy.status,401);
+});
