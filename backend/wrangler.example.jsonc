@@ -1,0 +1,13 @@
+{
+  "name": "bitcoin-obsessed-api",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-09-14",
+  "triggers": { "crons": ["* * * * *"] },
+  "vars": { "FIREBASE_PROJECT_ID": "your-firebase-project-id" },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "bitcoin-obsessed",
+    "database_id": "replace-with-your-d1-database-id",
+    "migrations_dir": "migrations"
+  }]
+}
